@@ -7,7 +7,7 @@ fullnameOverride: ""
 
 image:
   repository: flink
-  tag: 1.17.0-scala_2.12-java8
+  tag: 1.17.0
   pullPolicy: IfNotPresent
 imagePullSecrets: []
 
