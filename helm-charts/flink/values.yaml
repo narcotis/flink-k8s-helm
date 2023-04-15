@@ -101,7 +101,7 @@ flink:
       state.backend.fs.memory-threshold: 1024
       state.backend.fs.write-buffer-size: 4096
       state.backend.incremental: false
-      state.backend.local-recovery: false
+      state.backend.local-recovery: true
       state.checkpoints.num-retained: 1
       taskmanager.state.local.root-dirs: file:///flink_state/local-recovery
     # https://ci.apache.org/projects/flink/flink-docs-stable/ops/state/state_backends.html#rocksdb-state-backend-config-options

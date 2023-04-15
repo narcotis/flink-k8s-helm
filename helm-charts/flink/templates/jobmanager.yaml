@@ -61,14 +61,14 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           workingDir: {{ .Values.flink.workDir }}
-          command:
-            - "/bin/bash"
-            - "-c"
-            - {{ include "jobmanager.command" . | quote }}
+          command: ["kubernetes-jobmanager.sh", "kubernetes-session"]
+          {{- if .Values.jobmanager.highAvailability.enabled }}
+          args: ["$(POD_IP)"]
+          {{- end }}
           env:
             - name: JVM_ARGS
               value: {{ tpl .Values.jobmanager.jvmArgs . | quote }}
-            - name: FLINK_POD_IP
+            - name: POD_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
@@ -93,11 +93,7 @@ spec:
           {{- end }}
           readinessProbe:
             tcpSocket:
-           {{- if .Values.jobmanager.highAvailability.enabled }}
-              port: {{ .Values.jobmanager.highAvailability.syncPort }}
-           {{- else }}
               port: {{ .Values.jobmanager.ports.rpc }}
-            {{- end }}
             periodSeconds: {{ .Values.jobmanager.readinessProbe.periodSeconds }}
             initialDelaySeconds: {{ .Values.jobmanager.readinessProbe.initialDelaySeconds }}
           livenessProbe:
@@ -155,7 +151,7 @@ spec:
             name: {{ include "flink.fullname" . }}-config
             items:
               - key: flink-conf.yaml
-                path: flink-conf.yaml.tpl
+                path: flink-conf.yaml
               - key: log4j.properties
                 path: log4j.properties
               - key: security.properties

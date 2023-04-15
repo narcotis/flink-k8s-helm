@@ -116,7 +116,6 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.taskmanager.resources | nindent 12 }}
-
       volumes:
         - name: flink-config-volume
           configMap:
@@ -142,7 +141,6 @@ spec:
       {{- if .Values.taskmanager.extraVolumes -}}
         {{ toYaml .Values.taskmanager.extraVolumes | nindent 8 }}
       {{- end }}
-
       {{- with .Values.taskmanager.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
