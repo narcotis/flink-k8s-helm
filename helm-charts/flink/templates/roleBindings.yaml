@@ -1,0 +1,29 @@
+{{- if .Values.jobmanager.serviceAccount.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "jobmanager.serviceAccount" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "jobmanager.serviceAccount" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+{{- end }}
+---
+{{- if .Values.taskmanager.serviceAccount.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "taskmanager.serviceAccount" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "taskmanager.serviceAccount" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+{{- end }}
