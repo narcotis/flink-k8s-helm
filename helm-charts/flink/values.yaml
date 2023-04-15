@@ -152,11 +152,11 @@ jobmanager:
     # syncPort is a rpc port in HA configuration
     syncPort: 6150
     command: |
-      $FLINK_HOME/bin/jobmanager.sh ${POD_IP}
+      $FLINK_HOME/bin/jobmanager.sh start-foreground ${POD_IP}
   # Additional param for JVM to support security.properties override
   # check configMap for more information
   command: |
-    $FLINK_HOME/bin/jobmanager.sh
+    $FLINK_HOME/bin/jobmanager.sh start-foreground
   jvmArgs: "-Djava.security.properties={{ .Values.flink.workDir }}/conf/security.properties"
   # extraEnvs passes envs to Jobmanagers
   extraEnvs: []
@@ -221,7 +221,7 @@ taskmanager:
   # Additional param for JVM to support security.properties override
   # check configMap for more information
   command: |
-    $FLINK_HOME/bin/taskmanager.sh", "-Dtaskmanager.resource-id=$(POD_NAME)
+    $FLINK_HOME/bin/taskmanager.sh start-foreground -Dtaskmanager.resource-id=$(POD_NAME)
   jvmArgs: "-Djava.security.properties={{ .Values.flink.workDir }}/conf/security.properties"
   # extraEnvs passes envs to Taskmanagers
   extraEnvs: []
