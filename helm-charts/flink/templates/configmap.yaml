@@ -6,11 +6,6 @@ metadata:
 {{ include "flink.labels" . | indent 4 }}
 data:
   flink-conf.yaml: |+
-    {{- if .Values.jobmanager.highAvailability.enabled }}
-    jobmanager.rpc.address: REPLACE_HOSTNAME
-    {{- end }}
-{{ include "flink.configuration" . | indent 4 }}
-  flink-conf-taskmanager.yaml: |+
 {{ include "flink.configuration" . | indent 4 }}
   log4j.properties: |+
 {{ .Values.flink.logging.log4j_properties | indent 4 }}

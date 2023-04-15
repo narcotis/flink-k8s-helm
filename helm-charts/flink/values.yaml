@@ -22,6 +22,14 @@ securityContext: {}
 # For general configuration
 flink:
   # logging, log4j configuration copied from Flink distribution
+  additionalCommand: >-
+    wget https://repo1.maven.org/maven2/com/github/oshi/oshi-core/6.1.5/oshi-core-6.1.5.jar \
+    -O /opt/flink/lib/oshi-core-6.1.5.jar &&
+    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.10.0/jna-5.10.0.jar \
+    -O /opt/flink/lib/jna-5.10.0.jar &&
+    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna-platform/5.10.0/jna-platform-5.10.0.jar \
+    -O /opt/flink/lib/jna-platform-5.10.0.jar
+  
   logging:
     log4j_properties: |+
       # This affects logging for both user code and Flink
@@ -134,7 +142,7 @@ jobmanager:
   #      - /bin/sh
   #      - -c
   #      - "echo test"
-  # highAvailability configuration based on zookeeper
+  # highAvailability configuration based on Kubernetes
   highAvailability:
     enabled: true
     clusterId: flink
@@ -143,14 +151,10 @@ jobmanager:
     storageDir: "/flink_state"
     # syncPort is a rpc port in HA configuration
     syncPort: 6150
-    # command for HA configuration
-    # 'sed' can be changed to use flink service name, e.g. {{ include "flink.name" . }}-jobmanager
-    command: >-
-      sed 's/REPLACE_HOSTNAME/'${FLINK_POD_IP}'/'
-      $FLINK_HOME/conf/flink-conf.yaml.tpl > $FLINK_HOME/conf/flink-conf.yaml &&
-      $FLINK_HOME/bin/jobmanager.sh start-foreground;
+    command: ["$FLINK_HOME/bin/jobmanager.sh", "${POD_IP}"]
   # Additional param for JVM to support security.properties override
   # check configMap for more information
+  command: ["$FLINK_HOME/bin/jobmanager.sh"]
   jvmArgs: "-Djava.security.properties={{ .Values.flink.workDir }}/conf/security.properties"
   # extraEnvs passes envs to Jobmanagers
   extraEnvs: []
@@ -169,18 +173,6 @@ jobmanager:
   #    limits:
   #      cpu: 3800m
   #      memory: 8000Mi
-  additionalCommand: >-
-    cp /opt/flink/opt/flink-s3-fs-presto-*.jar
-    /opt/flink/lib/ &&
-    wget https://repo1.maven.org/maven2/com/github/oshi/oshi-core/3.4.0/oshi-core-3.4.0.jar
-    -O /opt/flink/lib/oshi-core-3.4.0.jar &&
-    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.4.0/jna-5.4.0.jar
-    -O /opt/flink/lib/jna-5.4.0.jar &&
-    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna-platform/5.4.0/jna-platform-5.4.0.jar
-    -O /opt/flink/lib/jna-platform-5.4.0.jar
-  command: >-
-    cp $FLINK_HOME/conf/flink-conf.yaml.tpl $FLINK_HOME/conf/flink-conf.yaml &&
-    $FLINK_HOME/bin/jobmanager.sh start-foreground;
   service:
     type: ClusterIP
     annotations: {}
@@ -226,6 +218,7 @@ taskmanager:
   statefulset: true
   # Additional param for JVM to support security.properties override
   # check configMap for more information
+  command: ["$FLINK_HOME/bin/taskmanager.sh", "-Dtaskmanager.resource-id=$(POD_NAME)"]
   jvmArgs: "-Djava.security.properties={{ .Values.flink.workDir }}/conf/security.properties"
   # extraEnvs passes envs to Taskmanagers
   extraEnvs: []
@@ -240,17 +233,6 @@ taskmanager:
   #    limits:
   #      cpu: 3800m
   #      memory: 8000Mi
-  additionalCommand: >-
-    cp /opt/flink/opt/flink-s3-fs-presto-*.jar
-    /opt/flink/lib/ &&
-    wget https://repo1.maven.org/maven2/com/github/oshi/oshi-core/3.4.0/oshi-core-3.4.0.jar
-    -O /opt/flink/lib/oshi-core-3.4.0.jar &&
-    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.4.0/jna-5.4.0.jar
-    -O /opt/flink/lib/jna-5.4.0.jar &&
-    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna-platform/5.4.0/jna-platform-5.4.0.jar
-    -O /opt/flink/lib/jna-platform-5.4.0.jar
-  command: >-
-    $FLINK_HOME/bin/taskmanager.sh start-foreground;
   service:
     type: ClusterIP
   nodeSelector: {}

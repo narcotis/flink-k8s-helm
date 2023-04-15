@@ -61,9 +61,11 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           workingDir: {{ .Values.flink.workDir }}
-          command: ["kubernetes-jobmanager.sh", "kubernetes-session"]
           {{- if .Values.jobmanager.highAvailability.enabled }}
-          args: ["$(POD_IP)"]
+          command:
+            - "/bin/bash"
+            - "-c"
+            - {{ include "jobmanager.command" . | quote }}
           {{- end }}
           env:
             - name: JVM_ARGS
