@@ -297,6 +297,6 @@ prometheus:
 
 secrets:
 #  Plain predefined secrets example
-#  kubernetesSecrets:
+ kubernetesSecrets: []
 #    - name: kerberos
 #      mountPath: /kerberos
