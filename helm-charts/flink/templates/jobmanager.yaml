@@ -100,7 +100,7 @@ spec:
             initialDelaySeconds: {{ .Values.jobmanager.readinessProbe.initialDelaySeconds }}
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.jobmanager.ports.blob }}
+              port: {{ .Values.jobmanager.ports.rpc }}
             initialDelaySeconds: {{ .Values.jobmanager.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.jobmanager.livenessProbe.periodSeconds }}
           volumeMounts:

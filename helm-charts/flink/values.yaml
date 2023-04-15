@@ -22,12 +22,12 @@ securityContext: {}
 # For general configuration
 flink:
   # logging, log4j configuration copied from Flink distribution
-  additionalCommand: |
-    wget https://repo1.maven.org/maven2/com/github/oshi/oshi-core/6.1.5/oshi-core-6.1.5.jar \
+  additionalCommand: >-
+    wget https://repo1.maven.org/maven2/com/github/oshi/oshi-core/6.1.5/oshi-core-6.1.5.jar
     -O /opt/flink/lib/oshi-core-6.1.5.jar &&
-    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.10.0/jna-5.10.0.jar \
+    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.10.0/jna-5.10.0.jar
     -O /opt/flink/lib/jna-5.10.0.jar &&
-    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna-platform/5.10.0/jna-platform-5.10.0.jar \
+    wget https://repo1.maven.org/maven2/net/java/dev/jna/jna-platform/5.10.0/jna-platform-5.10.0.jar
     -O /opt/flink/lib/jna-platform-5.10.0.jar
   
   logging:
