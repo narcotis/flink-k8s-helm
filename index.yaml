@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  flink:
+  - apiVersion: v1
+    appVersion: 1.17.0
+    description: Chart for Apache Flink
+    digest: 65e0fcd45c06063976b007ae040162a3a1204971189fd2c16e24b245e7bd997c
+    home: https://github.com/narcotis/flink-k8s-helm
+    maintainers:
+    - email: qhguswkd@gmail.com
+      name: narcotis
+    name: flink
+    urls:
+    - helm-charts/flink-0.1.0.tgz
+    version: 0.1.0
