@@ -1,9 +1,10 @@
 # Apache Flink Helm Chart
 
 This is an implementation of https://ci.apache.org/projects/flink/flink-docs-stable/ops/deployment/kubernetes.html
+Looking forward to be an implementation of https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/resource-providers/native_kubernetes/#native-kubernetes
 
 This chart will install session cluster https://ci.apache.org/projects/flink/flink-docs-stable/ops/deployment/kubernetes.html#flink-session-cluster-on-kubernetes.
-If you are interested in supporting session/job clusters: https://github.com/GoogleCloudPlatform/flink-on-k8s-operator
+If you are interested in supporting session/job clusters: https://github.com/apache/flink-kubernetes-operator
 
 ## Pre Requisites:
 
@@ -61,7 +62,6 @@ $ helm install --name flink --namespace flink flink-k8s/flink
 | `jobmanager.replicaCount`                | Taskmanager count context                                                                                                                                                | `1`                    |
 | `taskmanager.numberOfTaskSlots`          | Number of Taskmanager taskSlots resources                                                                                                                                | `1`                    |
 | `taskmanager.resources`                  | Taskmanager resources                                                                                                                                                    | `{}`                   |
-| `secrets.bitnamiSealedSecrets.enabled`   | Enables creation of [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)                                                                                     | `false`                |
 
 ### Install with HA
 
