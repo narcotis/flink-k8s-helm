@@ -61,14 +61,16 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           workingDir: {{ .Values.flink.workDir }}
+          {{- if .Values.jobmanager.highAvailability.enabled }}
           command:
             - "/bin/bash"
             - "-c"
             - {{ include "jobmanager.command" . | quote }}
+          {{- end }}
           env:
             - name: JVM_ARGS
               value: {{ tpl .Values.jobmanager.jvmArgs . | quote }}
-            - name: FLINK_POD_IP
+            - name: POD_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
@@ -93,16 +95,12 @@ spec:
           {{- end }}
           readinessProbe:
             tcpSocket:
-           {{- if .Values.jobmanager.highAvailability.enabled }}
-              port: {{ .Values.jobmanager.highAvailability.syncPort }}
-           {{- else }}
               port: {{ .Values.jobmanager.ports.rpc }}
-            {{- end }}
             periodSeconds: {{ .Values.jobmanager.readinessProbe.periodSeconds }}
             initialDelaySeconds: {{ .Values.jobmanager.readinessProbe.initialDelaySeconds }}
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.jobmanager.ports.blob }}
+              port: {{ .Values.jobmanager.ports.rpc }}
             initialDelaySeconds: {{ .Values.jobmanager.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.jobmanager.livenessProbe.periodSeconds }}
           volumeMounts:
@@ -155,7 +153,7 @@ spec:
             name: {{ include "flink.fullname" . }}-config
             items:
               - key: flink-conf.yaml
-                path: flink-conf.yaml.tpl
+                path: flink-conf.yaml
               - key: log4j.properties
                 path: log4j.properties
               - key: security.properties

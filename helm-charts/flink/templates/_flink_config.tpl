@@ -8,6 +8,8 @@ provide jobmanager.rpc.address to Taskmanagers
     blob.server.port: {{ .Values.jobmanager.ports.blob }}
     taskmanager.rpc.port: {{ .Values.taskmanager.ports.rpc }}
     jobmanager.heap.size: {{ .Values.jobmanager.heapSize }}
+    jobmanager.rpc.address: {{ include "flink.fullname" . }}-jobmanager
+    jobmanager.rpc.port: {{ .Values.jobmanager.ports.rpc }}
     {{- if .Values.taskmanager.memoryProcessSize }}
     taskmanager.memory.process.size: {{ .Values.taskmanager.memoryProcessSize }}
     {{- end }}
@@ -45,9 +47,8 @@ provide jobmanager.rpc.address to Taskmanagers
     kubernetes.cluster-id: {{ .Values.jobmanager.highAvailability.clusterId }}
     high-availability.storageDir: {{ .Values.jobmanager.highAvailability.storageDir }}
     high-availability.jobmanager.port: {{ .Values.jobmanager.highAvailability.syncPort }}
-    {{- else }}
-    jobmanager.rpc.address: {{ include "flink.fullname" . }}-jobmanager
-    jobmanager.rpc.port: {{ .Values.jobmanager.ports.rpc }}
+    restart-strategy.type: fixed-delay
+    restart-strategy.fixed-delay.attempts: 10
     {{- end }}
     {{- .Values.flink.params | nindent 4 }}
 {{- end -}}

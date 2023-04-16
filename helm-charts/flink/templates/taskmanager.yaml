@@ -68,6 +68,10 @@ spec:
           env:
             - name: JVM_ARGS
               value: {{ tpl .Values.taskmanager.jvmArgs . | quote }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           {{- if .Values.extraEnvs }}
           {{- toYaml .Values.extraEnvs | nindent 12 }}
           {{- end }}
@@ -116,13 +120,12 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.taskmanager.resources | nindent 12 }}
-
       volumes:
         - name: flink-config-volume
           configMap:
             name: {{ include "flink.fullname" . }}-config
             items:
-              - key: flink-conf-taskmanager.yaml
+              - key: flink-conf.yaml
                 path: flink-conf.yaml
               - key: log4j.properties
                 path: log4j.properties
@@ -142,7 +145,6 @@ spec:
       {{- if .Values.taskmanager.extraVolumes -}}
         {{ toYaml .Values.taskmanager.extraVolumes | nindent 8 }}
       {{- end }}
-
       {{- with .Values.taskmanager.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

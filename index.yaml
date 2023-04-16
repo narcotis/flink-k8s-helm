@@ -11,5 +11,5 @@ entries:
       name: narcotis
     name: flink
     urls:
-    - helm-charts/flink-0.1.0.tgz
-    version: 0.1.0
+    - helm-charts/flink-0.1.1.tgz
+    version: 0.1.1
